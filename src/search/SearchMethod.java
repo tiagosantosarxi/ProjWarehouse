@@ -5,7 +5,7 @@ import agentSearch.Solution;
 
 public interface SearchMethod {
 
-   Solution search(Problem problem);
+   Solution search(Problem problem) throws CloneNotSupportedException;
    
    Statistics getStatistics();
    

@@ -300,7 +300,11 @@ public class MainFrame extends JFrame implements GAListener {
 
                 @Override
                 public void done() {
-                    agentSearch = new WarehouseAgentSearch(state.clone());
+                    try {
+                        agentSearch = new WarehouseAgentSearch(state.clone());
+                    } catch (CloneNotSupportedException cloneNotSupportedException) {
+                        cloneNotSupportedException.printStackTrace();
+                    }
                     manageButtons(false, true, false, false, true, true, false, false);
                 }
             };

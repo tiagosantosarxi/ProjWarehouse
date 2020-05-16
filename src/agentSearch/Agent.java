@@ -27,7 +27,7 @@ public class Agent<E extends State> {
         heuristics = new ArrayList<>();
     }
 
-    public Solution solveProblem(Problem problem) {
+    public Solution solveProblem(Problem problem) throws CloneNotSupportedException {
         if (heuristic != null) {
             problem.setHeuristic(heuristic);
             heuristic.setProblem(problem);

@@ -17,7 +17,7 @@ public abstract class GraphSearch<L extends NodeCollection> implements SearchMet
     protected boolean stopped;
 
     @Override
-    public Solution search(Problem problem) {
+    public Solution search(Problem problem) throws CloneNotSupportedException {
         statistics.reset();
         stopped = false;
         return graphSearch(problem);
@@ -35,7 +35,7 @@ public abstract class GraphSearch<L extends NodeCollection> implements SearchMet
                 not in the frontier or explored set
         return failure
      */
-    protected Solution graphSearch(Problem problem) {
+    protected Solution graphSearch(Problem problem) throws CloneNotSupportedException {
         frontier.clear();
         explored.clear();
         frontier.add(new Node(problem.getInitialState()));
