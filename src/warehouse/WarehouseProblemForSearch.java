@@ -7,12 +7,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class WarehouseProblemForSearch<S extends WarehouseState> extends Problem<S> {
-
     private Cell goalPosition;
     private LinkedList<Action> listOfActions;
 
     public WarehouseProblemForSearch(S initialWarehouseState, Cell goalPosition) {
         super(initialWarehouseState);
+        this.goalPosition = goalPosition;
         this.listOfActions = new LinkedList<Action>() {
             {
                 add(new ActionUp());
@@ -21,7 +21,10 @@ public class WarehouseProblemForSearch<S extends WarehouseState> extends Problem
                 add(new ActionLeft());
             }
         };
-        this.goalPosition = goalPosition;
+    }
+
+    public Cell getGoalPosition() {
+        return goalPosition;
     }
 
     @Override

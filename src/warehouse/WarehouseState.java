@@ -12,6 +12,7 @@ public class WarehouseState extends State implements Cloneable {
     private int lineAgent, columnAgent;
     private int lineExit;
     private int columnExit;
+    private int steps;
 
     public WarehouseState(int[][] matrix) {
         this.matrix = new int[matrix.length][matrix.length];
@@ -25,6 +26,14 @@ public class WarehouseState extends State implements Cloneable {
                 }
             }
         }
+    }
+
+    public WarehouseState(int[][] matrix, int lineAgent, int columnAgent, int lineExit, int columnExit) {
+        this.matrix = matrix;
+        this.lineAgent = lineAgent;
+        this.columnAgent = columnAgent;
+        this.lineExit = lineExit;
+        this.columnExit = columnExit;
     }
 
     public void executeAction(Action action) {
@@ -58,21 +67,25 @@ public class WarehouseState extends State implements Cloneable {
     public void moveUp() {
         this.matrix[this.lineAgent - 1][this.columnAgent] = Properties.AGENT;
         this.matrix[this.lineAgent][this.columnAgent] = Properties.EMPTY;
+        this.lineAgent--;
     }
 
     public void moveRight() {
         this.matrix[this.lineAgent][this.columnAgent + 1] = Properties.AGENT;
         this.matrix[this.lineAgent][this.columnAgent] = Properties.EMPTY;
+        this.columnAgent++;
     }
 
     public void moveDown() {
         this.matrix[this.lineAgent + 1][this.columnAgent] = Properties.AGENT;
         this.matrix[this.lineAgent][this.columnAgent] = Properties.EMPTY;
+        this.lineAgent++;
     }
 
     public void moveLeft() {
         this.matrix[this.lineAgent][this.columnAgent - 1] = Properties.AGENT;
         this.matrix[this.lineAgent][this.columnAgent] = Properties.EMPTY;
+        this.columnAgent--;
     }
 
     public void setCellAgent(int line, int column) {
@@ -128,7 +141,9 @@ public class WarehouseState extends State implements Cloneable {
         return columnExit;
     }
 
-    private int steps;
+    public double calculate_distance(Cell goal){
+        return Math.abs(this.lineAgent - goal.getLine()) + Math.abs(this.columnAgent - goal.getColumn());
+    }
 
     @Override
     public boolean equals(Object other) {
@@ -165,7 +180,7 @@ public class WarehouseState extends State implements Cloneable {
 
     @Override
     public WarehouseState clone() {
-        return new WarehouseState(this.matrix);
+        return new WarehouseState(this.matrix, this.lineAgent, this.columnAgent, this.lineExit, this.columnExit);
     }
 
     private final ArrayList<EnvironmentListener> listeners = new ArrayList<>();
