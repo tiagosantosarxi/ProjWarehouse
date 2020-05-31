@@ -1,28 +1,45 @@
 package warehouse;
 
+import agentSearch.Action;
 import agentSearch.Problem;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class WarehouseProblemForSearch<S extends WarehouseState> extends Problem<S> {
 
-    //TODO this class might require the definition of additional methods and/or attributes
+    private Cell goalPosition;
+    private LinkedList<Action> listOfActions;
 
     public WarehouseProblemForSearch(S initialWarehouseState, Cell goalPosition) {
         super(initialWarehouseState);
-
-        //TODO
-        throw new UnsupportedOperationException("Not implemented yet.");
+        this.listOfActions = new LinkedList<Action>() {
+            {
+                add(new ActionUp());
+                add(new ActionRight());
+                add(new ActionDown());
+                add(new ActionLeft());
+            }
+        };
+        this.goalPosition = goalPosition;
     }
 
     @Override
-    public List<S> executeActions(S state) {
-        //TODO
-        throw new UnsupportedOperationException("Not implemented yet.");
+    public LinkedList<S> executeActions(S state) {
+        LinkedList<S> listOfSuccessors = new LinkedList<>();
+
+        for (Action action: listOfActions) {
+            if (action.isValid(state)) {
+                S successor = (S)state.clone();
+
+                action.execute(successor);
+                listOfSuccessors.add(successor);
+            }
+        }
+        return listOfSuccessors;
     }
 
     public boolean isGoal(S state) {
-        //TODO
-        throw new UnsupportedOperationException("Not implemented yet.");
+        return this.goalPosition.getLine() == state.getLineExit() && this.goalPosition.getColumn() == state.getColumnExit();
     }
 }
