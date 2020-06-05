@@ -3,7 +3,10 @@ package warehouse;
 import ga.GeneticAlgorithm;
 import ga.IntVectorIndividual;
 
+import java.util.ArrayList;
+
 public class WarehouseIndividual extends IntVectorIndividual<WarehouseProblemForGA, WarehouseIndividual> {
+    private int pathCost;
 
     public WarehouseIndividual(WarehouseProblemForGA problem, int size) {
         /**
@@ -38,76 +41,28 @@ public class WarehouseIndividual extends IntVectorIndividual<WarehouseProblemFor
 
     @Override
     public double computeFitness() {
+        ArrayList<Request> requests = new ArrayList<>(problem.getRequests());
+        for (Request request : requests) {
+            //Para cada Request
+            int[] requestUnico = request.getRequest();
 
-        fitness = 0;
-        for (Request r : problem.getRequests()) {
-
-            Cell cell1 = problem.getCellAgent(); //celula do agente
-            Cell cell2 = problem.getShelves().get(getShelfPos(genome,r.getRequest()[0]));
-            /**
-             //distância do Agente à primeira prateleira do pedido
-             for (Pair p : problemblem.get.getPairs()) {
-             if ((p.getCell1().equals(cell1) && p.getCell2().equals(cell2)) || (p.getCell1().equals(cell2) && p.getCell2().equals(cell1))) {
-             fitness += p.getValue();
-             break;
-             }
-             }*/
-            Pair pAux = new Pair(cell1,cell2);
-            Pair pAux2 = new Pair(cell2,cell1);
-            if(problem.getPairsHash().containsKey(pAux.hashCode())){
-                fitness+=problem.getPairsHash().get(pAux.hashCode());
-            }else{
-                fitness+=problem.getPairsHash().get(pAux2.hashCode());
-            }
-
-            for (int i = 0; i < r.getRequest().length-1; i++) {
-                cell1 = problem.getShelves().get(getShelfPos(genome,r.getRequest()[i]));
-                cell2= problem.getShelves().get(getShelfPos(genome,r.getRequest()[i+1]));
-
-                //distância do entre prateleiras do pedido
-                /*
-                for (Pair p : problem.getPairs()) {
-                    if ((p.getCell1().equals(cell1) && p.getCell2().equals(cell2)) || (p.getCell1().equals(cell2) && p.getCell2().equals(cell1))) {
-                        fitness += p.getValue();
-                        break;
+            //vê as distâncias entre cada um dos produtos a ser recolhidos e adiciona ao pathCost
+            for (int i = 0; i < requestUnico.length - 1; i++) {
+                for (int j = i + 1; j < requestUnico.length; j++) {
+                    int first = getShelfPos(genome, requestUnico[i]);
+                    int second = getShelfPos(genome, requestUnico[j]);
+                    Cell firstCell = problem.getShelves().get(first);
+                    Cell secondCell = problem.getShelves().get(second);
+                    if (firstCell != secondCell) {
+                        pathCost += problem.getPair(firstCell, secondCell).getValue();
                     }
                 }
-                */
-
-                pAux = new Pair(cell1,cell2);
-                pAux2 = new Pair(cell2,cell1);
-                if(problem.getPairsHash().containsKey(pAux.hashCode())){
-                    fitness+=problem.getPairsHash().get(pAux.hashCode());
-                }else{
-                    fitness+=problem.getPairsHash().get(pAux2.hashCode());
-                }
-
             }
-
-
-
-            cell1 = problem.getShelves().get(getShelfPos(genome,r.getRequest()[r.getRequest().length-1]));
-            cell2 = problem.getExit();
-
-            //distância da última prateleira à porta
-            /*
-            for (Pair p : problem.getPairs()) {
-                if ((p.getCell1().equals(cell1) && p.getCell2().equals(cell2)) || (p.getCell1().equals(cell2) && p.getCell2().equals(cell1))) {
-                    fitness += p.getValue();
-                    break;
-                }
-            }
-            */
-
-            pAux = new Pair(cell1,cell2);
-            pAux2 = new Pair(cell2,cell1);
-            if(problem.getPairsHash().containsKey(pAux.hashCode())){
-                fitness+=problem.getPairsHash().get(pAux.hashCode());
-            }else{
-                fitness+=problem.getPairsHash().get(pAux2.hashCode());
-            }
-
+            //adiciona ainda a distância da porta ao primeiro e do ultimo á porta
+            pathCost += problem.getPair(problem.getShelves().get(getShelfPos(genome, requestUnico[0])), problem.getExit()).getValue();
+            pathCost += problem.getPair(problem.getExit(), problem.getShelves().get(getShelfPos(genome, requestUnico[requestUnico.length - 1]))).getValue();
         }
+        fitness = pathCost;
         return fitness;
     }
 

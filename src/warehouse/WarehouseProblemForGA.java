@@ -29,6 +29,19 @@ public class WarehouseProblemForGA implements Problem<WarehouseIndividual> {
         }
     }
 
+    public Pair getPair(Cell first, Cell second) {
+        Pair pair;
+        for (int i = 0; i < this.pairs.size(); i++) {
+            pair = this.pairs.get(i);
+            if (pair.getCell1().toString().equals(first.toString()) && pair.getCell2().toString().equals(second.toString())) {
+                return pair;
+            } else if (pair.getCell1().toString().equals(second.toString()) && pair.getCell2().toString().equals(first.toString())){
+                return pair;
+            }
+        }
+        return null;
+    }
+
     public LinkedList<Cell> getShelves() {
         return shelves;
     }

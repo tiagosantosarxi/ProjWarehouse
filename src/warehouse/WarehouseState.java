@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class WarehouseState extends State implements Cloneable {
-    private final int[][] matrix;
+
+    private int[][] matrix;
     private int lineAgent, columnAgent;
     private int lineExit;
     private int columnExit;
@@ -17,24 +18,42 @@ public class WarehouseState extends State implements Cloneable {
     public WarehouseState(int[][] matrix) {
         this.matrix = new int[matrix.length][matrix.length];
 
+
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix.length; j++) {
                 this.matrix[i][j] = matrix[i][j];
-                if (matrix[i][j] == Properties.AGENT) {
-                    this.lineExit = this.lineAgent = i;
-                    this.columnExit = this.columnAgent = j;
+                if(matrix[i][j] == Properties.AGENT){
+                    lineExit = lineAgent = i;
+                    columnExit = columnAgent = j;
                 }
             }
         }
     }
 
     public WarehouseState(int[][] matrix, int lineAgent, int columnAgent, int lineExit, int columnExit) {
-        this.matrix = matrix;
+        this.matrix = Arrays.stream(matrix).map(int[]::clone).toArray(int[][]::new);
         this.lineAgent = lineAgent;
         this.columnAgent = columnAgent;
         this.lineExit = lineExit;
         this.columnExit = columnExit;
     }
+
+    public int getLineExit() {
+        return lineExit;
+    }
+
+    public int getColumnExit() {
+        return columnExit;
+    }
+
+    public double compute (int lineGoal, int columnGoal){
+        //heuristica
+        if(lineGoal == lineExit && columnGoal == columnExit){
+            return Math.abs(lineAgent-lineGoal) + Math.abs(columnAgent-(columnGoal));
+        }
+        return Math.abs(lineAgent-lineGoal) + Math.abs(columnAgent-(columnGoal+1));
+    }
+
 
     public void executeAction(Action action) {
         action.execute(this);
@@ -131,18 +150,6 @@ public class WarehouseState extends State implements Cloneable {
 
     public int getColumnAgent() {
         return columnAgent;
-    }
-
-    public int getLineExit() {
-        return lineExit;
-    }
-
-    public int getColumnExit() {
-        return columnExit;
-    }
-
-    public double calculate_distance(Cell goal){
-        return Math.abs(this.lineAgent - goal.getLine()) + Math.abs(this.columnAgent - goal.getColumn());
     }
 
     @Override

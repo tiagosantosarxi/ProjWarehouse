@@ -3,14 +3,13 @@ package warehouse;
 import agentSearch.Heuristic;
 
 public class HeuristicWarehouse extends Heuristic<WarehouseProblemForSearch, WarehouseState> {
-//    TODO : Verify compute function is this enough??
     @Override
     public double compute(WarehouseState state){
-        return state.calculate_distance(problem.getGoalPosition());
+        return state.compute(problem.getGoalPosition().getLine(),problem.getGoalPosition().getColumn());
     }
 
     @Override
     public String toString(){
-        return "Distance to goal";
+        return "Heuristica: Distância Linear";
     }
 }

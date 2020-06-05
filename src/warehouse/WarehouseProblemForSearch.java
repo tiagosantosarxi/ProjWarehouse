@@ -43,6 +43,8 @@ public class WarehouseProblemForSearch<S extends WarehouseState> extends Problem
     }
 
     public boolean isGoal(S state) {
-        return this.goalPosition.getLine() == state.getLineExit() && this.goalPosition.getColumn() == state.getColumnExit();
+        return this.goalPosition.getLine() == state.getLineExit() && this.goalPosition.getColumn() == state.getColumnExit()
+                ? state.getLineAgent()==getGoalPosition().getLine() && state.getColumnAgent()==getGoalPosition().getColumn()
+                : state.getLineAgent()==getGoalPosition().getLine() && state.getColumnAgent()==getGoalPosition().getColumn()+1;
     }
 }
