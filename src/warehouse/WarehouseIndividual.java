@@ -43,25 +43,11 @@ public class WarehouseIndividual extends IntVectorIndividual<WarehouseProblemFor
 
     @Override
     public double computeFitness() {
+//        TODO : COMPUTE FITNESS, it should be higher when the distance between myself and the first request
+        //TODO: and distance between the other requests  is lower
 
-        for (Request request : problem.getRequests()) {
-            int[] requestProducts = request.getRequest();
 
-            for (int i = 0; i < requestProducts.length - 1; i++) {
-                for (int j = i + 1; j < requestProducts.length; j++) {
-                    int first = getShelfPos(genome, requestProducts[i]);
-                    int second = getShelfPos(genome, requestProducts[j]);
-                    Cell firstCell = problem.getShelves().get(first);
-                    Cell secondCell = problem.getShelves().get(second);
-                    if (firstCell != secondCell) {
-                        pathCost += problem.getPair(firstCell, secondCell).getValue();
-                    }
-                }
-            }
-            pathCost += problem.getPair(problem.getShelves().get(getShelfPos(genome, requestProducts[0])), problem.getExit()).getValue();
-            pathCost += problem.getPair(problem.getExit(), problem.getShelves().get(getShelfPos(genome, requestProducts[requestProducts.length - 1]))).getValue();
-        }
-        fitness = pathCost;
+        fitness = 100;
         return fitness;
     }
 
