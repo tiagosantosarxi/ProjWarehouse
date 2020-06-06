@@ -38,7 +38,6 @@ public class GeneticAlgorithm<I extends Individual, P extends Problem<I>> {
     }
 
     public I run(P problem) {
-        System.out.println("RUN");
         t = 0;
         population = new Population<>(populationSize, problem);
         bestInRun = population.evaluate();

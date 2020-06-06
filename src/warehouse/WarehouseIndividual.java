@@ -4,6 +4,8 @@ import ga.GeneticAlgorithm;
 import ga.IntVectorIndividual;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 
 public class WarehouseIndividual extends IntVectorIndividual<WarehouseProblemForGA, WarehouseIndividual> {
     private int pathCost;
@@ -41,16 +43,14 @@ public class WarehouseIndividual extends IntVectorIndividual<WarehouseProblemFor
 
     @Override
     public double computeFitness() {
-        ArrayList<Request> requests = new ArrayList<>(problem.getRequests());
-        for (Request request : requests) {
-            //Para cada Request
-            int[] requestUnico = request.getRequest();
 
-            //vê as distâncias entre cada um dos produtos a ser recolhidos e adiciona ao pathCost
-            for (int i = 0; i < requestUnico.length - 1; i++) {
-                for (int j = i + 1; j < requestUnico.length; j++) {
-                    int first = getShelfPos(genome, requestUnico[i]);
-                    int second = getShelfPos(genome, requestUnico[j]);
+        for (Request request : problem.getRequests()) {
+            int[] requestProducts = request.getRequest();
+
+            for (int i = 0; i < requestProducts.length - 1; i++) {
+                for (int j = i + 1; j < requestProducts.length; j++) {
+                    int first = getShelfPos(genome, requestProducts[i]);
+                    int second = getShelfPos(genome, requestProducts[j]);
                     Cell firstCell = problem.getShelves().get(first);
                     Cell secondCell = problem.getShelves().get(second);
                     if (firstCell != secondCell) {
@@ -58,9 +58,8 @@ public class WarehouseIndividual extends IntVectorIndividual<WarehouseProblemFor
                     }
                 }
             }
-            //adiciona ainda a distância da porta ao primeiro e do ultimo á porta
-            pathCost += problem.getPair(problem.getShelves().get(getShelfPos(genome, requestUnico[0])), problem.getExit()).getValue();
-            pathCost += problem.getPair(problem.getExit(), problem.getShelves().get(getShelfPos(genome, requestUnico[requestUnico.length - 1]))).getValue();
+            pathCost += problem.getPair(problem.getShelves().get(getShelfPos(genome, requestProducts[0])), problem.getExit()).getValue();
+            pathCost += problem.getPair(problem.getExit(), problem.getShelves().get(getShelfPos(genome, requestProducts[requestProducts.length - 1]))).getValue();
         }
         fitness = pathCost;
         return fitness;
@@ -68,29 +67,26 @@ public class WarehouseIndividual extends IntVectorIndividual<WarehouseProblemFor
 
     public static int getShelfPos(int[] genome, int value) {
         int i = 0;
-        /*
-        String msg = "";
-        for (int j = 0; j < genome.length; j++) {
-            msg += genome[j];
-        }
-        System.out.println("genome: " + msg +" value: "+ value);
-        */
-        while(value!=genome[i]){
-            i++;
+        for (i = 0; i < genome.length; i++) {
+            if (genome[i] == value) {
+                break;
+            }
         }
         return i;
     }
 
-    //Return the product Id if the shelf in cell [line, column] has some product and 0 otherwise
     public int getProductInShelf(int line, int column) {
-        int i=0;
-        for (Cell c : problem.getShelves()) {
-            if (c.getLine() == line && c.getColumn() == column && genome[i]<= problem.getNumProducts()){
-                return genome[i];
+        int i = 0;
+        LinkedList<Cell> shelves = problem.getShelves();
+        for (Cell shelf : shelves) {
+            if (column == shelf.getColumn() && line == shelf.getLine() && genome[i] <= problem.getNumProducts()){
+                break;
             }
             i++;
         }
-        return 0;
+        return i < genome.length
+                ? genome[i]
+                : 0;
     }
 
     @Override
@@ -100,11 +96,8 @@ public class WarehouseIndividual extends IntVectorIndividual<WarehouseProblemFor
         sb.append(fitness);
         sb.append("\npath: ");
         for (int i = 0; i < genome.length; i++) {
-            if(genome[i]<=problem.getNumProducts()) {
-                sb.append(genome[i]).append(" ");
-            }else{
-                sb.append(0).append(" ");
-            }
+            sb.append(genome[i]).append(" ");
+            //this method might require changes
         }
 
         return sb.toString();
