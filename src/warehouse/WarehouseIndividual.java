@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 public class WarehouseIndividual extends IntVectorIndividual<WarehouseProblemForGA, WarehouseIndividual> {
-    private int pathCost;
 
     public WarehouseIndividual(WarehouseProblemForGA problem, int size) {
         /**
@@ -43,11 +42,22 @@ public class WarehouseIndividual extends IntVectorIndividual<WarehouseProblemFor
 
     @Override
     public double computeFitness() {
-//        TODO : COMPUTE FITNESS, it should be higher when the distance between myself and the first request
-        //TODO: and distance between the other requests  is lower
-
-
-        fitness = 100;
+        int distanceToTargets = 0;
+        for (Request request : problem.getRequests()) {
+            Cell agent = problem.getCellAgent();
+            Cell firstRequest = problem.getShelves().get(getShelfPos(genome,request.getRequest()[0]));
+            distanceToTargets += problem.getPair(agent, firstRequest).getValue();
+            Cell thisRequest = null;
+            Cell nextRequest = null;
+            for (int i = 0; i < request.getRequest().length - 1; i++) {
+                thisRequest = problem.getShelves().get(getShelfPos(genome,request.getRequest()[i]));
+                nextRequest = problem.getShelves().get(getShelfPos(genome,request.getRequest()[i+1]));
+                distanceToTargets += problem.getPair(thisRequest, nextRequest).getValue();
+            }
+            distanceToTargets += problem.getPair(problem.getShelves().get(getShelfPos(genome, request.getRequest()[0])), problem.getExit()).getValue();
+            distanceToTargets += problem.getPair(problem.getExit(), problem.getShelves().get(getShelfPos(genome, request.getRequest()[request.getRequest().length - 1]))).getValue();
+        }
+        fitness = distanceToTargets;
         return fitness;
     }
 
