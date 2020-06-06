@@ -5,7 +5,7 @@ import agentSearch.Heuristic;
 public class HeuristicWarehouse extends Heuristic<WarehouseProblemForSearch, WarehouseState> {
     @Override
     public double compute(WarehouseState state){
-        return state.compute(problem.getGoalPosition().getLine(),problem.getGoalPosition().getColumn());
+        return state.compute(problem.getGoalPosition());
     }
 
     @Override

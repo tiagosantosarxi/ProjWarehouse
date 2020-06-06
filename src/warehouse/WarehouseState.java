@@ -11,14 +11,12 @@ public class WarehouseState extends State implements Cloneable {
 
     private int[][] matrix;
     private int lineAgent, columnAgent;
-    private int lineExit;
-    private int columnExit;
+    private int lineExit, columnExit;
     private int steps;
 
     public WarehouseState(int[][] matrix) {
         this.matrix = new int[matrix.length][matrix.length];
-
-
+        this.steps = 0;
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix.length; j++) {
                 this.matrix[i][j] = matrix[i][j];
@@ -36,6 +34,7 @@ public class WarehouseState extends State implements Cloneable {
         this.columnAgent = columnAgent;
         this.lineExit = lineExit;
         this.columnExit = columnExit;
+        this.steps = 0;
     }
 
     public int getLineExit() {
@@ -46,12 +45,21 @@ public class WarehouseState extends State implements Cloneable {
         return columnExit;
     }
 
-    public double compute (int lineGoal, int columnGoal){
-        //heuristica
-        if(lineGoal == lineExit && columnGoal == columnExit){
-            return Math.abs(lineAgent-lineGoal) + Math.abs(columnAgent-(columnGoal));
-        }
-        return Math.abs(lineAgent-lineGoal) + Math.abs(columnAgent-(columnGoal+1));
+    public double compute (Cell goal){
+        /**
+         * Returns either the distance from agent to door
+         * or
+         * the distance from agent to the right of the next shelf
+         * */
+        return isGoalExit(goal.getLine(), goal.getColumn())
+                ? Math.abs(lineAgent-goal.getLine()) + Math.abs(columnAgent-(goal.getColumn()))
+                : Math.abs(lineAgent-goal.getLine()) + Math.abs(columnAgent-(goal.getColumn()+1));
+    }
+
+    public boolean isGoalExit(int lineGoal, int columnGoal){
+        return lineGoal == lineExit && columnGoal == columnExit
+                ? true
+                : false;
     }
 
 
@@ -133,7 +141,6 @@ public class WarehouseState extends State implements Cloneable {
     public Color getCellColor(int line, int column) {
         if (line == lineExit && column == columnExit && (line != lineAgent || column != columnAgent))
             return Properties.COLOREXIT;
-
         switch (matrix[line][column]) {
             case Properties.AGENT:
                 return Properties.COLORAGENT;

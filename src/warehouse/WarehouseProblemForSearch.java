@@ -30,11 +30,9 @@ public class WarehouseProblemForSearch<S extends WarehouseState> extends Problem
     @Override
     public LinkedList<S> executeActions(S state) {
         LinkedList<S> listOfSuccessors = new LinkedList<>();
-
         for (Action action: listOfActions) {
             if (action.isValid(state)) {
                 S successor = (S)state.clone();
-
                 action.execute(successor);
                 listOfSuccessors.add(successor);
             }

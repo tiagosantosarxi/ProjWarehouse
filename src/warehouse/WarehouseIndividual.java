@@ -42,6 +42,15 @@ public class WarehouseIndividual extends IntVectorIndividual<WarehouseProblemFor
 
     @Override
     public double computeFitness() {
+        /**
+         * Compute fitness of individual
+         *
+         * Sum of:
+         *      distance between the agent and the first request
+         *      distance between requests
+         *      distance between last request and exit
+         *
+         *  */
         int distanceToTargets = 0;
         for (Request request : problem.getRequests()) {
             Cell agent = problem.getCellAgent();
@@ -54,7 +63,6 @@ public class WarehouseIndividual extends IntVectorIndividual<WarehouseProblemFor
                 nextRequest = problem.getShelves().get(getShelfPos(genome,request.getRequest()[i+1]));
                 distanceToTargets += problem.getPair(thisRequest, nextRequest).getValue();
             }
-            distanceToTargets += problem.getPair(problem.getShelves().get(getShelfPos(genome, request.getRequest()[0])), problem.getExit()).getValue();
             distanceToTargets += problem.getPair(problem.getExit(), problem.getShelves().get(getShelfPos(genome, request.getRequest()[request.getRequest().length - 1]))).getValue();
         }
         fitness = distanceToTargets;
@@ -93,9 +101,12 @@ public class WarehouseIndividual extends IntVectorIndividual<WarehouseProblemFor
         sb.append("\npath: ");
         for (int i = 0; i < genome.length; i++) {
             sb.append(genome[i]).append(" ");
-            //this method might require changes
         }
-
+        sb.append("\nShelfs: \n");
+        for (int i = 0; i < genome.length; i++) {
+            String prod = genome[i] < problem.getNumProducts() ? genome[i] + "" : "Empty shelf";
+            sb.append(problem.getShelves().get(i) + " - " + prod + "\n");
+        }
         return sb.toString();
     }
 

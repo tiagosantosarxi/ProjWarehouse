@@ -14,7 +14,6 @@ public class WarehouseProblemForGA implements Problem<WarehouseIndividual> {
     private ArrayList<Request> requests;
     private int numProducts;
     private HashMap<String, Pair> pairs;
-    private HashMap<Integer, Integer> pairsHash;
 
     public WarehouseProblemForGA(WarehouseAgentSearch agentSearch) {
         this.shelves = agentSearch.getShelves();
@@ -62,13 +61,8 @@ public class WarehouseProblemForGA implements Problem<WarehouseIndividual> {
         return numProducts;
     }
 
-    public HashMap<Integer, Integer> getPairsHash() {
-        return pairsHash;
-    }
-
     @Override
     public WarehouseIndividual getNewIndividual() {
         return new WarehouseIndividual(this,shelves.size());
     }
-
 }
