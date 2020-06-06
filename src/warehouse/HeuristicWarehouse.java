@@ -10,6 +10,6 @@ public class HeuristicWarehouse extends Heuristic<WarehouseProblemForSearch, War
 
     @Override
     public String toString(){
-        return "Heuristica: Distância Linear";
+        return "Distance to goal(Door or shelf)";
     }
 }

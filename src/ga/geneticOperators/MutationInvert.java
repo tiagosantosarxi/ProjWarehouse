@@ -12,6 +12,10 @@ public class MutationInvert<I extends IntVectorIndividual, P extends Problem<I>>
 
     @Override
     public void mutate(I ind) {
+        /**
+         * Perform a insert mutation but inverted
+         * from the last cut position to the mid between cut 1 and cut 2
+         * */
         int cut1 = GeneticAlgorithm.random.nextInt(ind.getNumGenes());
         int cut2;
         do {

@@ -80,6 +80,13 @@ public class WarehouseIndividual extends IntVectorIndividual<WarehouseProblemFor
     }
 
     public int getProductInShelf(int line, int column) {
+        /**
+         *
+         * Finds the shelf with the line and column
+         * makes sure the shelf has the product
+         * returns the genome for it
+         *
+         * */
         int i = 0;
         LinkedList<Cell> shelves = problem.getShelves();
         for (Cell shelf : shelves) {

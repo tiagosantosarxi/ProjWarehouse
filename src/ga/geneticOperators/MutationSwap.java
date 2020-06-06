@@ -12,14 +12,18 @@ public class MutationSwap<I extends IntVectorIndividual, P extends Problem<I>> e
 
     @Override
     public void mutate(I ind) {
-        int cut1 = GeneticAlgorithm.random.nextInt(ind.getNumGenes());
-        int cut2;
+        /**
+         * Perform a swap mutation
+         * Simply swap gene from position 1 to position 2
+         * */
+        int pos1 = GeneticAlgorithm.random.nextInt(ind.getNumGenes());
+        int pos2;
         do {
-            cut2 = GeneticAlgorithm.random.nextInt(ind.getNumGenes());
-        } while (cut1 == cut2);
-        int aux = ind.getGene(cut1);
-        ind.setGene(cut1, ind.getGene(cut2));
-        ind.setGene(cut2, aux);
+            pos2 = GeneticAlgorithm.random.nextInt(ind.getNumGenes());
+        } while (pos1 == pos2);
+        int aux = ind.getGene(pos1);
+        ind.setGene(pos1, ind.getGene(pos2));
+        ind.setGene(pos2, aux);
     }
 
     @Override

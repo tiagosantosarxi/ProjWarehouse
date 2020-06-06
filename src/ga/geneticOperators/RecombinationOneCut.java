@@ -17,6 +17,7 @@ public class RecombinationOneCut<I extends IntVectorIndividual, P extends Proble
 
     @Override
     public void recombine(I ind1, I ind2) {
+//      FIXME - ERROR ACCESSING POSITION OF ARRAY OUT OF BOUNDS / REPEATED GENES???
         child1 = new int[ind1.getNumGenes()];
         child2 = new int[ind2.getNumGenes()];
         do {

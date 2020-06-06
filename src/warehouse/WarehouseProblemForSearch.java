@@ -41,7 +41,18 @@ public class WarehouseProblemForSearch<S extends WarehouseState> extends Problem
     }
 
     public boolean isGoal(S state) {
-        return this.goalPosition.getLine() == state.getLineExit() && this.goalPosition.getColumn() == state.getColumnExit()
+        /**
+         *
+         * Checks if the goal is to go to the exit
+         *
+         * if it is then returns the operator to validate if he is in the exit
+         *
+         * if the goal is not the exit then the goal is to be to the right of the shelf
+         *
+         * return the boolean to verify that too
+         *
+         * */
+        return state.isGoalExit(getGoalPosition().getLine(), getGoalPosition().getColumn())
                 ? state.getLineAgent()==getGoalPosition().getLine() && state.getColumnAgent()==getGoalPosition().getColumn()
                 : state.getLineAgent()==getGoalPosition().getLine() && state.getColumnAgent()==getGoalPosition().getColumn()+1;
     }
