@@ -8,71 +8,68 @@ import java.util.LinkedList;
 
 public class WarehouseProblemForGA implements Problem<WarehouseIndividual> {
 
-    private LinkedList<Cell> shelves;
-    private Cell cellAgent;
-    private Cell exit;
     private ArrayList<Request> requests;
+    private LinkedList<Cell> shelves;
+    private HashMap<String, Pair> pairs;
+    private Cell door;
     private int numProducts;
-    private LinkedList<Pair> pairs;
-    private HashMap<Integer, Integer> pairsHash;
 
     public WarehouseProblemForGA(WarehouseAgentSearch agentSearch) {
-        this.shelves = agentSearch.getShelves();
-        this.cellAgent = agentSearch.getCellAgent();
-        this.exit = agentSearch.getExit();
-        this.requests=agentSearch.getRequests();
-        this.numProducts = agentSearch.getNumProducts();
-        this.pairs =  agentSearch.getPairs();
-        this.pairsHash = new HashMap<>();
-        for (Pair p : pairs) {
-            pairsHash.put(p.hashCode(),p.getValue());
+        requests = new ArrayList<>(agentSearch.getRequests());
+        shelves = new LinkedList<>(agentSearch.getShelves());
+        numProducts = agentSearch.getNumProducts();
+        door = agentSearch.getExit();
+        pairs = new HashMap<String, Pair>();
+        for (int i = 0; i < agentSearch.getPairs().size(); i++) {
+            Pair pair = (Pair) agentSearch.getPairs().get(i);
+            String key = pair.getCell1().getLine() + "," + pair.getCell1().getColumn() + "-" + pair.getCell2().getLine() + "," + pair.getCell2().getColumn();
+            pairs.put(key, pair);
         }
     }
 
-    public Pair getPair(Cell first, Cell second) {
-        Pair pair;
-        for (int i = 0; i < this.pairs.size(); i++) {
-            pair = this.pairs.get(i);
-            if (pair.getCell1().toString().equals(first.toString()) && pair.getCell2().toString().equals(second.toString())) {
-                return pair;
-            } else if (pair.getCell1().toString().equals(second.toString()) && pair.getCell2().toString().equals(first.toString())){
-                return pair;
-            }
-        }
-        return null;
-    }
-
-    public LinkedList<Cell> getShelves() {
-        return shelves;
-    }
-
-    public Cell getCellAgent() {
-        return cellAgent;
-    }
-
-    public Cell getExit() {
-        return exit;
+    @Override
+    public WarehouseIndividual getNewIndividual() {
+        return new WarehouseIndividual(this, shelves.size());
     }
 
     public ArrayList<Request> getRequests() {
         return requests;
     }
 
+    public LinkedList<Cell> getShelves() {
+        return shelves;
+    }
+
+
+    public Cell getDoor() {
+        return door;
+    }
+
     public int getNumProducts() {
         return numProducts;
     }
 
-    public LinkedList<Pair> getPairs() {
-        return pairs;
-    }
-
-    public HashMap<Integer, Integer> getPairsHash() {
-        return pairsHash;
+    public Pair getPair(Cell first, Cell second) {
+        String key = first.getLine() + "," + first.getColumn() + "-" + second.getLine() + "," + second.getColumn();
+        Pair pair = pairs.get(key);
+        if (pair == null) {
+            key = second.getLine() + "," + second.getColumn() + "-" + first.getLine() + "," + first.getColumn();
+            pair = pairs.get(key);
+        }
+        return pair;
     }
 
     @Override
-    public WarehouseIndividual getNewIndividual() {
-        return new WarehouseIndividual(this,shelves.size());
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("# of products: ");
+        sb.append(numProducts);
+        sb.append("\n");
+        sb.append("Requests: ");
+        for (Request request : requests) {
+            sb.append(request);
+        }
+        return sb.toString();
     }
 
 }

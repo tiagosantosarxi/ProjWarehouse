@@ -59,8 +59,8 @@ public class WarehouseIndividual extends IntVectorIndividual<WarehouseProblemFor
                 }
             }
             //adiciona ainda a distância da porta ao primeiro e do ultimo á porta
-            pathCost += problem.getPair(problem.getShelves().get(getShelfPos(genome, requestUnico[0])), problem.getExit()).getValue();
-            pathCost += problem.getPair(problem.getExit(), problem.getShelves().get(getShelfPos(genome, requestUnico[requestUnico.length - 1]))).getValue();
+            pathCost += problem.getPair(problem.getShelves().get(getShelfPos(genome, requestUnico[0])), problem.getDoor()).getValue();
+            pathCost += problem.getPair(problem.getDoor(), problem.getShelves().get(getShelfPos(genome, requestUnico[requestUnico.length - 1]))).getValue();
         }
         fitness = pathCost;
         return fitness;
